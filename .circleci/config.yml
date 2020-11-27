@@ -440,23 +440,26 @@ jobs:
       - run:
           name: wait for registry
           command: echo 'It works!'
+  e2e-v2-job2:
+    executor:
+      class: small
+      name: sb_node_10_classic
+    working_directory: /tmp/storybook
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: It works 2!
+          command: echo 'It works 2!'
 
 parameters:
-  run_workflow_test:
-    type: boolean
-    default: true
-
-  run_workflow_deploy:
-    type: boolean
-    default: true
-
   run_workflow_e2e:
     type: boolean
     default: false
 
 workflows:
   test:
-    when: << pipeline.parameters.run_workflow_test >>
     jobs:
 #      - build
       - install-e2e-deps
@@ -505,9 +508,8 @@ workflows:
 #          requires:
 #            - publish
   deploy:
-    when: << pipeline.parameters.run_workflow_deploy >>
     jobs:
-      - frontpage
+      - install-e2e-deps
   e2e:
     when: << pipeline.parameters.run_workflow_e2e >>
     jobs:
