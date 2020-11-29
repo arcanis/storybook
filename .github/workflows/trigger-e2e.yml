@@ -1,23 +1,20 @@
-name: Trigger E2E tests
+name: Trigger CircleCI workflow to run all E2E tests
 
 on:
   pull_request:
-    types: [labeled, opened, synchronize, reopened]
+    types: [labeled]
 
 jobs:
-  tigger-e2e:
-#    if: github.event.label.name == 'approved'
-    name: Trigger E2E tests workflow on CircleCI
+  trigger-e2e:
+    if: github.event.label.name == 'run all e2e tests'
     runs-on: ubuntu-latest
     steps:
-      - name: Echo
-        run: echo 'It works'
-#    - name: Trigger E2E tests workflow on CircleCI
-#      run: >
-#        curl --request POST
-#        --url https://circleci.com/api/v2/project/gh/storybookjs/storybook/pipeline
-#        --header 'Circle-Token: '"$CIRCLE_CI_TOKEN"' '
-#        --header 'content-type: application/json'
-#        --data '{"branch":"${{ github.event.pull_request.head.ref }}", "parameters":{ "run_workflow_e2e":true }}'
-#      env:
-#        CIRCLE_CI_TOKEN: ${{ secrets.CIRCLE_CI_TOKEN_GMAISSE_TEST }}
+      - name: Make request to CircleCI
+        run: >
+          curl --request POST
+          --url https://circleci.com/api/v2/project/gh/storybookjs/storybook/pipeline
+          --header 'Circle-Token: '"$CIRCLE_CI_TOKEN"' '
+          --header 'content-type: application/json'
+          --data '{"branch":"${{ github.event.pull_request.head.ref }}"}'
+        env:
+          CIRCLE_CI_TOKEN: ${{ secrets.CIRCLE_CI_TOKEN_GMAISSE_TEST }}
