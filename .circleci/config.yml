@@ -507,11 +507,7 @@ workflows:
       - frontpage
   e2e:
     jobs:
-      - hold:
-          type: approval
-      - e2e-v2:
-          requires:
-            - hold
+      - e2e-v2
       - e2e-v2-job2:
           requires:
             - e2e-v2
