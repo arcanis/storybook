@@ -447,7 +447,7 @@ jobs:
     working_directory: /tmp/storybook
     steps:
       - run:
-          name: Get PR info
+          name: Check if PR is labeled with "run all e2e tests"
           command: |
             sudo apt-get install jq
 
@@ -461,11 +461,11 @@ jobs:
 
             echo $PR_RESPONSE
 
-            if [ $(echo $pr_response | jq '.labels | map(select(.name == "run e2e tests")) | length') -eq 1 ]; then
-              echo "🚀 The PR is labelled with 'run e2e tests', the E2E test suite will be played!"
-            else
-              echo "🏁 The PR isn't labelled with 'run e2e tests' so the E2E test suite won't be played."
+            if [ $(echo $PR_RESPONSE | jq '.labels | map(select(.name == "run all e2e tests")) | length') -eq 0 ]; then
+              echo "🏁 The PR isn't labelled with 'run all e2e tests' so only the main E2E tests will be executed."
               circleci-agent step halt
+            else
+              echo "🚀 The PR is labelled with 'run all e2e tests', all E2E tests will be executed!"
             fi
 
 workflows:
