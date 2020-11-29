@@ -440,7 +440,7 @@ jobs:
       - run:
           name: wait for registry
           command: echo 'It works!'
-  e2e-v2-job2:
+  e2e-gate:
     executor:
       class: small
       name: sb_node_10_classic
@@ -465,6 +465,7 @@ jobs:
               echo "🚀 The PR is labelled with 'run e2e tests', the E2E test suite will be played!"
             else
               echo "🏁 The PR isn't labelled with 'run e2e tests' so the E2E test suite won't be played."
+              circleci-agent step halt
             fi
 
 workflows:
@@ -516,9 +517,12 @@ workflows:
 #      - examples-v2-cra-bench:
 #          requires:
 #            - publish
-  deploy:
-    jobs:
-      - e2e-v2
+#  deploy:
+#    jobs:
+#      - e2e-v2
   e2e:
     jobs:
-      - e2e-v2-job2
+      - e2e-gate
+      - e2e-v2:
+          requires:
+            - e2e-gate
