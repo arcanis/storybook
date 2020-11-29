@@ -457,7 +457,7 @@ workflows:
   test:
     jobs:
 #      - build
-      - install-e2e-deps
+      - e2e-v2
 #      - install-examples-deps
 #      - lint:
 #          requires:
@@ -504,7 +504,7 @@ workflows:
 #            - publish
   deploy:
     jobs:
-      - frontpage
+      - e2e-v2
   e2e:
     jobs:
       - e2e-v2
